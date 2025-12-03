@@ -12,12 +12,36 @@ import blog_pic_7 from './blog_pic_7.png';
 import blog_pic_8 from './blog_pic_8.png';
 import blog_pic_9 from './blog_pic_9.png';
 import blog_pic_10 from './blog_pic_10.png';
+import user_icon from './user_icon.svg';
+import home_icon from './home_icon.svg';
+import add_icon from './add_icon.svg';
+import list_icon from './list_icon.svg';
+import comment_icon from './comment_icon.svg';
+import facebook_icon from './facebook_icon.svg';
+import twitter_icon from './twitter_icon.svg';
+import instagram_icon from './instagram_icon.png';
+import dashboard_icon_1 from './dashboard_icon_1.svg';
+import dashboard_icon_2 from './dashboard_icon_2.svg';
+import dashboard_icon_3 from './dashboard_icon_3.svg';
+import dashboard_icon_4 from './dashboard_icon_4.svg';
 
 export const assets = {
-  logo,
-  arrow,
-  gradientBackground,
-  star_icon
+    logo,
+    arrow,
+    gradientBackground,
+    star_icon,
+    user_icon,
+    home_icon,
+    add_icon,
+    list_icon,
+    comment_icon,
+    facebook_icon,
+    twitter_icon,
+    instagram_icon,
+    dashboard_icon_1,
+    dashboard_icon_2,
+    dashboard_icon_3,
+    dashboard_icon_4,
 }
 
 export const blogCategories = [

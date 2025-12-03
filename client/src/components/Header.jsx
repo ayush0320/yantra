@@ -7,7 +7,7 @@ const Header = () => {
 
         <div className='text-center my-20 mb-8'>
 
-            <div className='inline-flex items-center justify-center gap-4 px-6 py-1.5 mb-4 border border-blue-300 rounded-full text-sm text-blue-600 hover:bg-blue-100 cursor-pointer'>
+            <div className='inline-flex items-center justify-center gap-4 px-6 py-1.5 mb-4 border border-blue-300 rounded-full text-sm text-blue-600 bg-blue-100/60 font-medium'>
                 <p>Ai Feature Integrated</p>
                 <img src={assets.star_icon} className="inline-block w-4" alt="" />
             </div>
