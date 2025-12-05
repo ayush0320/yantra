@@ -1,7 +1,8 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import connectDB from './config/db.js';
+import connectDB from './configs/db.js';
+import admintRouter from './routes/adminRoutes.js';
 
 const app = express();
 
@@ -13,9 +14,8 @@ app.use(cors());
 app.use(express.json()); // To parse JSON bodies
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+app.get('/', (req, res) => { res.send('Hello, World!')});
+app.use('/api/admin', admintRouter);
 
 // Sample route
 const PORT = process.env.PORT || 3000;
