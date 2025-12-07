@@ -37,7 +37,7 @@ const AddBlog = () => {
 
         <label htmlFor="image">
           <img src={!image ? assets.upload_area : URL.createObjectURL(image)} className='mt-2 h-16 rounded cursor-pointer' alt="" />
-          <input onChange={(e) => setImage(e.target.files[0])} type="file" name="" id="image" hidden required/>
+          <input onChange={(e) => setImage(e.target.files[0])} type="file" name="image" id="image" hidden required/>
         </label>
 
         <p className='mt-4'>Blog Title</p>

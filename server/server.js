@@ -3,6 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import connectDB from './configs/db.js';
 import admintRouter from './routes/adminRoutes.js';
+import blogRouter from './routes/blogRoutes.js';
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(express.json()); // To parse JSON bodies
 // Routes
 app.get('/', (req, res) => { res.send('Hello, World!')});
 app.use('/api/admin', admintRouter);
+app.use('/api/blog', blogRouter);
+
 
 // Sample route
 const PORT = process.env.PORT || 3000;
