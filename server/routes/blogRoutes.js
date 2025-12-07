@@ -8,13 +8,9 @@ const blogRouter = express.Router();
 
 // Route to add a new blog post
 blogRouter.post(
-	'/add',
-	auth,
-	upload.fields([
-		{ name: 'image', maxCount: 1 },
-		{ name: 'thumbnail', maxCount: 1 },
-	]),
-	addBlog
-);
+    '/add',
+    auth,
+    upload.single('image'),
+    addBlog);
 
 export default blogRouter;
