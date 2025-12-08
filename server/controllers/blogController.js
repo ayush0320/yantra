@@ -6,11 +6,11 @@ export const addBlog = async (req, res) => {
     try {
 
         // Parse blog data from request body
-        const { title, subtitle, description, category, image, isPublished } = JSON.parse(req.body.blog);
+        const { title, subtitle, description, category, isPublished } = JSON.parse(req.body.blog);
         const imageFile = req.file;
 
         // Check if all required fields are present
-        if( !title || !description || !category || !imageFile || isPublished) {
+        if( !title || !description || !category || !imageFile) {
             return res.status(400).json({ success: false, message: "All fields are required!" });
         }
 
@@ -21,12 +21,12 @@ export const addBlog = async (req, res) => {
         const response = await imageKit.upload({
             file: fileBuffer,
             fileName: imageFile.originalname,
-            folder: "/blogs/"
+            folder: "/blogs"
         });
 
         // Optimize through ImageKit URL transformations
         const optimizedImageUrl = imageKit.url({
-            src: response.url,
+            path: response.filePath,
             transformation: [
                 {   quality: "auto",  // Auto quality based on viewer's device
                     format: "webp", // Convert to WebP format
@@ -36,10 +36,7 @@ export const addBlog = async (req, res) => {
         });
 
         // Prepare blog data with optimized image URL
-        const imageData = {
-            url: optimizedImageUrl,
-            imageKitId: response.fileId
-        };
+        const image = optimizedImageUrl;
 
         // Save blog to database
         await Blog.create({
@@ -47,7 +44,7 @@ export const addBlog = async (req, res) => {
             subtitle,
             description,
             category,
-            image: imageData,
+            image,
             isPublished
         });
 
