@@ -51,6 +51,6 @@ export const addBlog = async (req, res) => {
         res.json({ success: true, message: "Blog added successfully!" });
 
     } catch (error) {
-        res.json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message });
     }
 }
