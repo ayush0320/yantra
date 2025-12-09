@@ -93,7 +93,7 @@ curl -X POST http://localhost:3000/api/blog/add \
 ```json
 {
   "success": false,
-  "message": "No token provided. Unauthorized Access!"
+  "message": "No token provided - Unauthorized access"
 }
 ```
 
@@ -101,7 +101,7 @@ curl -X POST http://localhost:3000/api/blog/add \
 ```json
 {
   "success": false,
-  "message": "Invalid or expired token. Unauthorized Access!"
+  "message": "Invalid or expired token - Unauthorized access"
 }
 ```
 
@@ -168,14 +168,18 @@ Authorization: Bearer <your_token_here>
 
 ## Common Issues
 
-### Issue: "Unauthorized Access" with status 200 (OLD)
-**Fixed:** Now returns proper HTTP 401 status code
-
 ### Issue: Token not recognized
 **Solution:** Ensure you're using the correct format: `Bearer <token>`
 
 ### Issue: "Invalid Admin Credentials"
 **Solution:** Verify your credentials match the `.env` file values
+
+## Changelog
+
+### Recent Fixes (v1.1.0)
+- **Fixed:** "Unauthorized Access" now returns proper HTTP 401 status code (previously returned 200)
+- **Fixed:** Added support for "Bearer " prefix in Authorization header
+- **Fixed:** Improved error messages for better debugging
 
 ## Code Changes Summary
 

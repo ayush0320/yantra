@@ -8,7 +8,7 @@ const auth = (req, res, next) => {
 
     // If no token, deny access
     if (!authHeader) {
-        return res.status(401).json({ success: false, message: "No token provided. Unauthorized Access!" });
+        return res.status(401).json({ success: false, message: "No token provided - Unauthorized access" });
     }
 
     // Extract token from "Bearer <token>" format
@@ -18,7 +18,7 @@ const auth = (req, res, next) => {
         jwt.verify(token, process.env.JWT_SECRET);
         next();
     } catch (error) {
-        res.status(401).json({ success: false, message: "Invalid or expired token. Unauthorized Access!" });
+        res.status(401).json({ success: false, message: "Invalid or expired token - Unauthorized access" });
     }
 }
 
