@@ -15,7 +15,7 @@ const auth = (req, res, next) => {
         }
 
         // Handle both "Bearer <token>" and raw token formats
-        const token = authHeader. startsWith('Bearer ') 
+        const token = authHeader.startsWith('Bearer ') 
             ? authHeader.slice(7) 
             : authHeader;
         
