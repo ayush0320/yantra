@@ -4,7 +4,14 @@ import jwt from 'jsonwebtoken';
 const auth = (req, res, next) => {
 
     // Get token from Authorization header
-    const token = req.header('Authorization');
+    const authHeader = req.header('Authorization');
+
+    if(!authHeader) {
+        return res.json({ success: false, message: "Access Denied. No token provided." });
+    }
+    
+    // Extract token by removing 'Bearer ' prefix
+    const token = authHeader.replace('Bearer ', '');
 
     // If no token, deny access
     try{
