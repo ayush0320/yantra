@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 
-// Middleware to authenticate requests using JWT
 const auth = (req, res, next) => {
     try {
-        // Get token from Authorization header
         const authHeader = req.header('Authorization');
         
-        // If no token, deny access
+        console.log('Auth Header:', authHeader);
+        console.log('JWT_SECRET:', process.env.JWT_SECRET);
+        
         if (!authHeader) {
             return res.status(401).json({ 
                 success: false, 
@@ -14,16 +14,19 @@ const auth = (req, res, next) => {
             });
         }
 
-        // Handle both "Bearer <token>" and raw token formats
         const token = authHeader.startsWith('Bearer ') 
             ? authHeader.slice(7) 
             : authHeader;
         
-        // Verify the token
-        jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Token to verify:', token);
+        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Decoded token:', decoded);
+        
         next();
         
     } catch (error) {
+        console.log('Auth error:', error.message);
         res.status(403).json({ 
             success: false, 
             message: "403 Your account cannot be authenticated." 

@@ -1,45 +1,45 @@
 import fs from 'fs';
-import ImageKit, { toFile } from '@imagekit/nodejs';
-import imageKit from '../configs/imageKit.js';
+import imageKit from '../configs/imageKit. js';
 import Blog from '../models/Blog.js';
 
 export const addBlog = async (req, res) => {
     try {
+        console.log('addBlog called');
+        
+        // Debug ImageKit credentials
+        console. log('IMAGEKIT_PUBLIC_KEY:', process.env. IMAGEKIT_PUBLIC_KEY);
+        console.log('IMAGEKIT_PRIVATE_KEY:', process.env.IMAGEKIT_PRIVATE_KEY);
+        console.log('IMAGEKIT_URL_ENDPOINT:', process.env. IMAGEKIT_URL_ENDPOINT);
 
-        // Parse blog data from request body
-        const { title, subtitle, description, category, isPublished } = JSON.parse(req.body.blog);
+        const { title, subtitle, description, category, isPublished } = JSON.parse(req. body. blog);
         const imageFile = req.file;
 
-        // Check if all required fields are present
-        if( !title || !description || !category || !imageFile) {
-            return res.status(400).json({ success: false, message: "All fields are required!" });
+        if (!title || !description || !category || ! imageFile) {
+            return res.status(400).json({ success: false, message:  "All fields are required!" });
         }
 
-        // Read image file buffer
         const fileBuffer = fs.readFileSync(imageFile.path);
 
+        console.log('Uploading to ImageKit...');
+        
         // Upload image to ImageKit
-        const response = await imageKit.files.upload({
+        const response = await imageKit. upload({
             file: fileBuffer,
             fileName: imageFile.originalname,
             folder: "/blogs"
         });
 
-        // Optimize through ImageKit URL transformations
+        console.log('ImageKit response:', response);
+
         const optimizedImageUrl = imageKit.url({
             path: response.filePath,
             transformation: [
-                {   quality: "auto",  // Auto quality based on viewer's device
-                    format: "webp", // Convert to WebP format
-                    width: "1280", // Resize width to 1280px
-                }
+                { quality: "auto", format: "webp", width: "1280" }
             ]
         });
 
-        // Prepare blog data with optimized image URL
         const image = optimizedImageUrl;
 
-        // Save blog to database
         await Blog.create({
             title,
             subtitle,
@@ -52,6 +52,8 @@ export const addBlog = async (req, res) => {
         res.json({ success: true, message: "Blog added successfully!" });
 
     } catch (error) {
+        console.log('Full error:', error);
+        console.log('Error message:', error.message);
         res.json({ success: false, message: error.message });
     }
 }
