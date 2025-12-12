@@ -1,45 +1,41 @@
 import fs from 'fs';
-import imageKit from '../configs/imageKit. js';
+import imageKit from '../configs/imageKit.js';
 import Blog from '../models/Blog.js';
 
 export const addBlog = async (req, res) => {
     try {
-        console.log('addBlog called');
-        
-        // Debug ImageKit credentials
-        console. log('IMAGEKIT_PUBLIC_KEY:', process.env. IMAGEKIT_PUBLIC_KEY);
-        console.log('IMAGEKIT_PRIVATE_KEY:', process.env.IMAGEKIT_PRIVATE_KEY);
-        console.log('IMAGEKIT_URL_ENDPOINT:', process.env. IMAGEKIT_URL_ENDPOINT);
 
-        const { title, subtitle, description, category, isPublished } = JSON.parse(req. body. blog);
+        // Extract blog details and image file from the request
+        const { title, subtitle, description, category, isPublished } = JSON.parse(req. body.blog);
         const imageFile = req.file;
 
+        // Validate required fields
         if (!title || !description || !category || ! imageFile) {
-            return res.status(400).json({ success: false, message:  "All fields are required!" });
+            return res.status(400).json({ success: false, message: "All fields are required!" });
         }
 
-        const fileBuffer = fs.readFileSync(imageFile.path);
+        // Read the image file and convert it to base64
+        const fileBuffer = fs. readFileSync(imageFile.path);
+        const base64File = fileBuffer.toString('base64');
 
-        console.log('Uploading to ImageKit...');
-        
-        // Upload image to ImageKit
-        const response = await imageKit. upload({
-            file: fileBuffer,
+        // Upload the image to ImageKit
+        const response = await imageKit. files.upload({
+            file: base64File,
             fileName: imageFile.originalname,
             folder: "/blogs"
         });
 
-        console.log('ImageKit response:', response);
+        // Construct optimized image URL
+        const baseUrl = response.url;
+        const optimizedImageUrl = baseUrl.replace(
+            '/blogs/',
+            '/tr:q-auto,f-webp,w-1280/blogs/'
+        );
 
-        const optimizedImageUrl = imageKit.url({
-            path: response.filePath,
-            transformation: [
-                { quality: "auto", format: "webp", width: "1280" }
-            ]
-        });
-
+        // Create a new blog entry in the database
         const image = optimizedImageUrl;
 
+        // Save blog to database
         await Blog.create({
             title,
             subtitle,
@@ -49,11 +45,13 @@ export const addBlog = async (req, res) => {
             isPublished
         });
 
+        // Delete the temporary image file
+        fs.unlinkSync(imageFile.path);
+
+        // Send success response
         res.json({ success: true, message: "Blog added successfully!" });
 
     } catch (error) {
-        console.log('Full error:', error);
-        console.log('Error message:', error.message);
         res.json({ success: false, message: error.message });
     }
 }
