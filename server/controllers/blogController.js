@@ -2,6 +2,7 @@ import fs from 'fs';
 import imageKit from '../configs/imageKit.js';
 import Blog from '../models/Blog.js';
 
+// Controller to add a new blog
 export const addBlog = async (req, res) => {
     try {
 
@@ -53,5 +54,62 @@ export const addBlog = async (req, res) => {
 
     } catch (error) {
         res.json({ success: false, message: error.message });
+    }
+}
+
+// Controller to get all published blogs
+export const getAllBlogs = async (req, res) => {
+    try{
+        const blogs = await Blog.find({isPublished: true});
+        res.json({success: true, blogs});
+    } catch(error){
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Controller to get a blog by its ID
+export const getBlogsById = async (req, res) => {
+    try{
+
+        const { blogId } = req.params;
+        const blog = await Blog.findById(blogId);
+        if(!blog){
+            return res.json({success: false, message: "Blog not found!"});
+        }
+        res.json({success: true, blog});
+
+    } catch(error){
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Controller to delete a blog by its ID
+export const deleteBlogsById = async (req, res) => {
+    try{
+        
+        const { blogId } = req.body;
+        const blog = await Blog.findByIdAndDelete(blogId);
+        if(!blog){
+            return res.json({success: false, message: "Blog not found!"});
+        }
+        res.json({success: true, message: "Blog deleted successfully!"});
+
+    } catch(error){
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Controller to toggle publish status of a blog by its ID
+export const togglePublishBlogById = async (req, res) => {
+    try{
+
+        const { blogId } = req.body;
+        const blog = await Blog.findById(blogId);
+        blog.isPublished = !blog.isPublished;
+        await blog.save();
+        res.json({success: true, message: "Blog publish status updated successfully!"});
+
+    } catch(error){
+        res.json({success: false, message: error.message});
     }
 }
