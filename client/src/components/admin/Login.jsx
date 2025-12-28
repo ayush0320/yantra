@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import { useAppContext } from '../../context/appContext.jsx'
+import { useAppContext } from '../../context/AppContext.jsx'
 import toast from 'react-hot-toast';
 
 const Login = () => {
 
-  const {axios, setToken} = useAppContext();
+  const {axios, setToken, navigate} = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSbumit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try{
       const  {data} = await axios.post('/api/admin/login', {email, password});
@@ -16,15 +16,16 @@ const Login = () => {
       if(data.success){
         setToken(data.token);
         localStorage.setItem('token', data.token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+        navigate('/admin');
       }
       else {
-        toast.error(data.message);
+        toast.error(data.message || 'Invalid credentials');
       }
       
     }
     catch(err){
-      toast.error(err.response.data.message);
+      const message = err?.response?.data?.message || err?.message || 'Login failed';
+      toast.error(message);
     }
   }
 
@@ -38,7 +39,7 @@ const Login = () => {
               <p className='font-light'>Add your credentials to login</p>
            </div>
 
-           <form onSubmit={handleSbumit} className='mt-6 w-full sm:max-w-md text-gray-800'>
+           <form onSubmit={handleSubmit} className='mt-6 w-full sm:max-w-md text-gray-800'>
             <div className='flex flex-col'>
               <label>Email</label>
               <input type="email" onChange={e => setEmail(e.target.value)} value={email} required placeholder='enter your email id'

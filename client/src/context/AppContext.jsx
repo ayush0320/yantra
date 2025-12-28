@@ -1,12 +1,12 @@
 // this file is used to create a global context for the app
 // so that we can share data across components without prop drilling
 
-import { createContext, use, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
 
 // create the context
 const AppContext = createContext();
@@ -19,6 +19,14 @@ export const AppProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [blogs, setBlogs] = useState([]);
     const [input, setInput] = useState("");
+
+    useEffect(() => {
+        if(token){
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        } else {
+            delete axios.defaults.headers.common['Authorization'];
+        }
+    }, [token]);
 
     const fetchBlogs = async () => {
         try{
@@ -35,7 +43,6 @@ export const AppProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         if(token){
             setToken(token);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
     }, []);
 
