@@ -1,14 +1,31 @@
-import React from 'react'
 import { useState } from 'react'
+import { useAppContext } from '../../context/appContext.jsx'
+import toast from 'react-hot-toast';
 
 const Login = () => {
 
+  const {axios, setToken} = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSbumit = async (e) => {
     e.preventDefault();
-    // add login logic here
+    try{
+      const  {data} = await axios.post('/api/admin/login', {email, password});
+
+      if(data.success){
+        setToken(data.token);
+        localStorage.setItem('token', data.token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      }
+      else {
+        toast.error(data.message);
+      }
+      
+    }
+    catch(err){
+      toast.error(err.response.data.message);
+    }
   }
 
   return (
