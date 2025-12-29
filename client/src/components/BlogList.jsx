@@ -1,5 +1,5 @@
 import React from 'react'
-import {  blog_data, blogCategories } from '../assets/assets'
+import { blogCategories } from '../assets/assets'
 import { useState } from 'react'
 import {motion} from 'motion/react' 
 import BlogCard from './BlogCard.jsx'
@@ -7,20 +7,26 @@ import { useAppContext } from '../context/AppContext.jsx'
 
 const BlogList = () => {
 
-    // to manage active menu
     const [menu, setMenu] = useState("All")
-    // to get blogs and input from context
     const {blogs, input} = useAppContext()
 
-    // function to filter blogs based on search input
+    console.log('BlogList - blogs:', blogs);
+    console.log('BlogList - input:', input);
+
+    // Add safety check for blogs
     const filteredBlogs = () => {
+        if (!blogs || blogs.length === 0) {
+            return [];
+        }
+        
         if(input === ""){
             return blogs;
         }
+        
         return blogs.filter((blog) => 
-            blog.title.toLowerCase().includes(input.toLowerCase()) ||
-            blog.description.toLowerCase().includes(input.toLowerCase()) ||
-            blog.category.toLowerCase().includes(input.toLowerCase())
+            blog?. title?.toLowerCase().includes(input.toLowerCase()) ||
+            blog?.description?.toLowerCase().includes(input.toLowerCase()) ||
+            blog?.category?. toLowerCase().includes(input.toLowerCase())
         );
     }
 
@@ -37,7 +43,7 @@ const BlogList = () => {
                         {item}
                         {menu === item && (<motion.div layoutId='underline' 
                         transition={{type: 'spring', stiffness: 500, damping: 30}}
-                        className="absolute left-0 right-0 top-0 h-7 bg-indigo-600 rounded-full -z-1"></motion.div>)}
+                        className="absolute left-0 right-0 top-0 h-7 bg-indigo-600 rounded-full -z-10"></motion.div>)}
                         
                     </button>
 
@@ -48,10 +54,16 @@ const BlogList = () => {
 
         {/* --- blog items --- */}
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 
-        gap-8 mb-24 sm:mx-16 xl:mx-32'>
-            {filteredBlogs()
-            .filter((blog) => menu === "All" ? true : blog.category === menu)
-            .map((blog) => <BlogCard blog={blog} key={blog._id} />)}
+        gap-8 mb-24 sm: mx-16 xl:mx-32'>
+            {filteredBlogs().length > 0 ? (
+                filteredBlogs()
+                .filter((blog) => menu === "All" ? true : blog.category === menu)
+                .map((blog) => <BlogCard blog={blog} key={blog._id} />)
+            ) : (
+                <div className='col-span-full text-center py-20'>
+                    <p className='text-gray-500 text-lg'>No blogs found</p>
+                </div>
+            )}
         </div>
 
     </div>
