@@ -3,11 +3,26 @@ import {  blog_data, blogCategories } from '../assets/assets'
 import { useState } from 'react'
 import {motion} from 'motion/react' 
 import BlogCard from './BlogCard.jsx'
+import { useAppContext } from '../context/AppContext.jsx'
 
 const BlogList = () => {
 
     // to manage active menu
     const [menu, setMenu] = useState("All")
+    // to get blogs and input from context
+    const {blogs, input} = useAppContext()
+
+    // function to filter blogs based on search input
+    const filteredBlogs = () => {
+        if(input === ""){
+            return blogs;
+        }
+        return blogs.filter((blog) => 
+            blog.title.toLowerCase().includes(input.toLowerCase()) ||
+            blog.description.toLowerCase().includes(input.toLowerCase()) ||
+            blog.category.toLowerCase().includes(input.toLowerCase())
+        );
+    }
 
   return (
     <div>
@@ -34,7 +49,7 @@ const BlogList = () => {
         {/* --- blog items --- */}
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 
         gap-8 mb-24 sm:mx-16 xl:mx-32'>
-            {blog_data
+            {filteredBlogs()
             .filter((blog) => menu === "All" ? true : blog.category === menu)
             .map((blog) => <BlogCard blog={blog} key={blog._id} />)}
         </div>
