@@ -8,6 +8,7 @@ const BlogCard = ({blog}) => {
   const [imageError, setImageError] = useState(false);
 
   const handleImageError = () => {
+    console.log('Image failed to load:', image);
     setImageError(true);
   };
 
@@ -25,7 +26,9 @@ const BlogCard = ({blog}) => {
         />
       ) : (
         <div className='w-full h-48 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center'>
-          <span className='text-white text-4xl font-bold'>{title?. charAt(0).toUpperCase()}</span>
+          <span className='text-white text-4xl font-bold'>
+            {title?. charAt(0)?.toUpperCase() || '📝'}
+          </span>
         </div>
       )}
 
@@ -36,7 +39,7 @@ const BlogCard = ({blog}) => {
       <div className='p-5'>
         <h5 className='mb-2 font-medium text-lg text-gray-800'>{title}</h5>
         <p className='mb-3 text-sm text-gray-600' dangerouslySetInnerHTML={{
-          "__html":  description?. slice(0, 80) || ''
+          "__html": description?.slice(0, 80) || ''
         }}></p>
       </div>
 

@@ -10,12 +10,13 @@ const BlogList = () => {
     const [menu, setMenu] = useState("All")
     const {blogs, input} = useAppContext()
 
-    console.log('BlogList - blogs:', blogs);
-    console.log('BlogList - input:', input);
+    console.log('Blogs:', blogs);
+    console.log('Input:', input);
 
-    // Add safety check for blogs
+    // function to filter blogs based on search input
     const filteredBlogs = () => {
-        if (!blogs || blogs.length === 0) {
+        // Return empty array if blogs haven't loaded yet
+        if (!blogs || ! Array.isArray(blogs)) {
             return [];
         }
         
@@ -54,15 +55,25 @@ const BlogList = () => {
 
         {/* --- blog items --- */}
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 
-        gap-8 mb-24 sm: mx-16 xl:mx-32'>
-            {filteredBlogs().length > 0 ? (
-                filteredBlogs()
-                .filter((blog) => menu === "All" ? true : blog.category === menu)
-                .map((blog) => <BlogCard blog={blog} key={blog._id} />)
-            ) : (
+        gap-8 mb-24 sm:mx-16 xl:mx-32'>
+            {/* Show loading state while blogs are being fetched */}
+            {! blogs || blogs.length === 0 ? (
                 <div className='col-span-full text-center py-20'>
-                    <p className='text-gray-500 text-lg'>No blogs found</p>
+                    <div className='inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600'></div>
+                    <p className='text-gray-500 mt-4'>Loading blogs... </p>
                 </div>
+            ) : (
+                filteredBlogs()
+                .filter((blog) => menu === "All" ? true :  blog.category === menu)
+                .length === 0 ? (
+                    <div className='col-span-full text-center py-20'>
+                        <p className='text-gray-500 text-lg'>No blogs found</p>
+                    </div>
+                ) : (
+                    filteredBlogs()
+                    .filter((blog) => menu === "All" ? true : blog. category === menu)
+                    . map((blog) => <BlogCard blog={blog} key={blog._id} />)
+                )
             )}
         </div>
 

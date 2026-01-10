@@ -3,8 +3,13 @@ import { assets, blogCategories } from '../../assets/assets.js';
 import { useState } from 'react';
 import Quill from 'quill';
 import { useRef } from 'react';
+import { useAppContext } from '../../context/AppContext.jsx';
+import toast from 'react-hot-toast';
 
 const AddBlog = () => {
+
+  const {axios} = useAppContext();
+  const [isAdding, setIsAdding] = useState(false);
 
   const editorRef = useRef(null);
   const quillRef = useRef(null);
@@ -16,7 +21,42 @@ const AddBlog = () => {
   const [isPublished, setIsPublished] = useState(false);
 
   const onSubmitHandler = async (e) => {
+    try {
     e.preventDefault();
+    setIsAdding(true);
+
+    const blog = {
+      title,
+      subtitle,
+      description: quillRef.current.root.innerHTML,
+      category,
+      isPublished
+    }
+
+    const formData = new FormData();
+    formData.append('blog', JSON.stringify(blog));
+    formData.append('image', image);
+
+    const {data} = await axios.post('/api/blog/add', formData);
+
+    if(data.success){
+      toast.success(data.message);
+      setTitle("");
+      setSubtitle("");
+      quillRef.current.root.innerHTML = "";
+      setImage(null);
+      setCategory("Startup");
+      setIsPublished(false);
+    } else {
+      toast.error(data.message);
+    }
+
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsAdding(false);
+    }
+
   }
 
   const generateContent = async () => {
@@ -69,7 +109,9 @@ const AddBlog = () => {
           className='scale-125 cursor-pointer'/>
         </div>
 
-        <button type='submit' className='mt-8 w-40 h-10 bg-blue-500 text-white rounded cursor-pointer text-sm'>Add blog</button>
+        <button disabled={isAdding} type='submit' className='mt-8 w-40 h-10 bg-blue-500 text-white rounded cursor-pointer text-sm'>
+          {isAdding ? "Adding..." : "Add Blog"}
+        </button>
 
       </div>
     </form>
