@@ -22,7 +22,7 @@ const Blog = () => {
   // fetch blog data
   const fetchBlogData = async () => {
     try{
-      const {data} = await axios.get(`api/blogs/${id}`);
+      const {data} = await axios.get(`api/blog/${id}`);
       data.success ? setData(data.blog) : toast.error(data.message);
     }
     catch(error){
@@ -33,7 +33,7 @@ const Blog = () => {
   // fetch comments
   const fetchComments = async () => {
     try{
-      const {data} = await axios.post(`api/blog/comments`, {blogId: id});
+      const {data} = await axios.post(`/api/blog/comments`, {blogId: id});
       data.success ? setComments(data.comments) : toast.error(data.message);
     }
     catch(error){
@@ -44,7 +44,7 @@ const Blog = () => {
   const addComment = async (e) => {
     e.preventDefault();
     try {
-      const {data} = await axios.post(`api/blog/add-comment`, {blog: id, name, content});
+      const {data} = await axios.post(`/api/blog/add-comment`, {blog: id, name, content});
       data.success ? (toast.success(data.message), setName(''), setContent('')) : toast.error(data.message);
     } catch (error) {
       toast.error(error.message)
@@ -101,12 +101,12 @@ const Blog = () => {
           <div className='max-w-3xl mx-auto'>
             <p className='font-semibold mb-4'>Add a comment</p>
 
-            <form action="" className='flex flex-col items-start gap-4 max-w-lg'>
+            <form onSubmit={addComment} className='flex flex-col items-start gap-4 max-w-lg'>
               <input type="text" onChange={(e) => setName(e.target.value)} value={name} placeholder='Name' className='w-full p-2 border border-gray-300 rounded outline-none' required/>
 
-              <textarea onChange={(e) => setComment(e.target.value)} value={comment} placeholder='Comment' className='w-full p-2 border border-gray-300 rounded outline-none h-48' required></textarea>
+              <textarea onChange={(e) => setContent(e.target.value)} value={content} placeholder='Comment' className='w-full p-2 border border-gray-300 rounded outline-none h-48' required></textarea>
 
-              <button type='submit' className='bg-indigo-500 text-white px-4 py-2 rounded mt-2 hover:scale-105 transition-all cursor-pointer text-white'>Post</button>
+              <button type='submit' className='bg-indigo-500 px-4 py-2 rounded mt-2 hover:scale-105 transition-all cursor-pointer text-white'>Post</button>
             </form>
           </div>
 

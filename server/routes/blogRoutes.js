@@ -15,7 +15,7 @@ blogRouter.post(
     addBlog);
 
 blogRouter.get('/all', getAllBlogs);
-blogRouter.post('/:blogId', getBlogsById);
+blogRouter.get('/:blogId', getBlogsById);
 blogRouter.post('/delete/:blogId', auth, deleteBlogsById);
 blogRouter.post('/toggle-publish/:blogId', auth, togglePublishBlogById);
 blogRouter.post('/add-comment', addComment);

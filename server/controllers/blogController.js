@@ -86,7 +86,7 @@ export const getBlogsById = async (req, res) => {
 // Controller to delete a blog by its ID
 export const deleteBlogsById = async (req, res) => {
     try{
-        const { blogId } = req.body;
+        const { blogId } = req.params;
         const blog = await Blog.findByIdAndDelete(blogId);
 
         // Delete associated comments
@@ -106,7 +106,7 @@ export const deleteBlogsById = async (req, res) => {
 export const togglePublishBlogById = async (req, res) => {
     try{
 
-        const { blogId } = req.body;
+        const { blogId } = req.params;
         const blog = await Blog.findById(blogId);
         blog.isPublished = !blog.isPublished;
         await blog.save();

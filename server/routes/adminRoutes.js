@@ -1,6 +1,6 @@
 import express from 'express';
 import { adminLogin, getAllCommentsAdmin, getAllBlogsAdmin, deleteCommentById, approveCommentById, getDashboard } from '../controllers/adminController.js';
-import { auth } from '../middlewares/authMiddleware.js';
+import auth from '../middleware/auth.js';
 
 // Create a router for admin routes
 const admintRouter = express.Router();

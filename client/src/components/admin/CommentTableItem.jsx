@@ -3,8 +3,39 @@ import { assets } from '../../assets/assets';
 
 const CommentTableItem = ({comment, fetchComments}) => {
 
+    const { axios } = useAppContext();
+
     const {blog, createdAt, _id} = comment;
     const BlogDate = new Date(createdAt);
+
+    const deleteComment = async () => {
+        try {
+            const {data} = await axios.post('/api/admin/delete-comment', {id: _id});
+            if(data.success) {
+                toast.success(data.message);
+                await fetchComments();
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
+    const approveComment = async () => {
+        try {
+            const {data} = await axios.post('/api/admin/approve-comment', {id: _id});
+            if(data.success) {
+                toast.success(data.message);
+                await fetchComments();
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
 
   return (
     <tr className='order-y border-gray-300'>
