@@ -26,7 +26,7 @@ const auth = (req, res, next) => {
         next();
         
     } catch (error) {
-        console.log('Auth error:', error.message);
+        // console.log('Auth error:', error.message);
         res.status(403).json({ 
             success: false, 
             message: "403 Your account cannot be authenticated." 
