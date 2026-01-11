@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { comments_data } from '../../assets/assets.js';
 import CommentTableItem from '../../components/admin/CommentTableItem.jsx';
 import { useAppContext } from '../../context/AppContext.jsx';
+import toast from 'react-hot-toast';
 
 const Comments = () => {
 

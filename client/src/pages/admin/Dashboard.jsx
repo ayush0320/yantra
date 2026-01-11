@@ -28,13 +28,13 @@ const Dashboard = () => {
 
   // Function to fetch dashboard data (simulated here with static data)
   // In a real application, this would involve an API call
-  const fetchDashboardData = async () => {
-    setDashboardData(dashboard_data);
-  }
+  // const fetchDashboardData = async () => {
+  //   setDashboardData(dashboard_data);
+  // }
 
   // Fetch dashboard data on component mount
   useEffect(() => {
-    fetchDashboardData();
+    fetchDashboard();
   }, []);
 
 
@@ -93,7 +93,7 @@ const Dashboard = () => {
 
               <tbody>
                 {dashboardData.recentBlogs.map((blog, index) => {
-                  return <BlogTableItem key={blog._id} blog={blog} fetchBlogs={fetchDashboardData} index={index + 1} />
+                  return <BlogTableItem key={blog._id} blog={blog} fetchBlogs={fetchDashboard} index={index + 1} />
                 })}
               </tbody>
 

@@ -9,6 +9,6 @@ const blogSchema = new mongoose.Schema({
     isPublished: { type: Boolean, required: true},
 }, { timestamps: true });
 
-const Blog = mongoose.model('blog', blogSchema);
+const Blog = mongoose.model('Blog', blogSchema);
 
 export default Blog;
