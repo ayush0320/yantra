@@ -18,10 +18,10 @@ const auth = (req, res, next) => {
             ? authHeader.slice(7) 
             : authHeader;
         
-        console.log('Token to verify:', token);
+        // console.log('Token to verify:', token);
         
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Decoded token:', decoded);
+        // console.log('Decoded token:', decoded);
         
         next();
         
