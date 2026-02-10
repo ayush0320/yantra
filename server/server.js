@@ -20,20 +20,21 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // allow no-origin requests like curl/Postman
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
       return callback(new Error("Not allowed by CORS"));
     },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
 
-// handle preflight
+// Explicit preflight handler
 app.options("*", cors());
 
 // Middleware
-app.use(express.json());
+app.use(express.json()); // To parse JSON bodies
 
 // Routes
 app.get("/", (req, res) => {
@@ -42,8 +43,10 @@ app.get("/", (req, res) => {
 app.use("/api/admin", admintRouter);
 app.use("/api/blog", blogRouter);
 
-// Start the server
+// Sample route
 const PORT = process.env.PORT || 3000;
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
