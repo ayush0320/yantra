@@ -85,6 +85,8 @@ const AddBlog = () => {
     }
   }, []);
 
+  const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
+
   return (
     <form
       onSubmit={onSubmitHandler}
@@ -101,7 +103,18 @@ const AddBlog = () => {
             alt=""
           />
           <input
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+
+              if (file.size > MAX_IMAGE_SIZE) {
+                toast.error("Please upload an image smaller than 2 MB.");
+                e.target.value = "";
+                return;
+              }
+
+              setImage(file);
+            }}
             type="file"
             name="image"
             id="image"
