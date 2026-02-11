@@ -22,13 +22,24 @@ export const addBlog = async (req, res) => {
     // Read the image file and convert it to base64
     const fileBuffer = fs.readFileSync(imageFile.path);
     const base64File = fileBuffer.toString("base64");
-
     // Upload the image to ImageKit
-    const response = await imageKit.files.upload({
-      file: base64File,
-      fileName: imageFile.originalname,
-      folder: "/blogs",
-    });
+    const response = await fetch(
+      "https://upload.imagekit.io/api/v1/files/upload",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.IMAGEKIT_PUBLIC_KEY}:${process.env.IMAGEKIT_PRIVATE_KEY}`,
+          ).toString("base64")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          file: `data:${imageFile.mimetype};base64,${base64File}`,
+          fileName: imageFile.originalname,
+          folder: "/blogs",
+        }),
+      },
+    );
 
     // Construct optimized image URL
     const baseUrl = response.url;

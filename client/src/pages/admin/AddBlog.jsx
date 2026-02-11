@@ -42,34 +42,10 @@ const AddBlog = () => {
     }
   };
 
-  const uploadToImageKit = async (file) => {
-    const { data: auth } = await axios.get("/api/imagekit/auth");
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("fileName", file.name);
-    formData.append("publicKey", import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
-    formData.append("signature", auth.signature);
-    formData.append("expire", auth.expire);
-    formData.append("token", auth.token);
-    formData.append("folder", "/blogs");
-
-    const res = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-    if (!data.url) throw new Error("Image upload failed");
-    return data.url;
-  };
-
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
       setIsAdding(true);
-
-      const imageUrl = await uploadToImageKit(image);
 
       const blog = {
         title,
@@ -77,10 +53,13 @@ const AddBlog = () => {
         description: quillRef.current.root.innerHTML,
         category,
         isPublished,
-        image: imageUrl,
       };
 
-      const { data } = await axios.post("/api/blog/add", blog);
+      const formData = new FormData();
+      formData.append("blog", JSON.stringify(blog));
+      formData.append("image", image);
+
+      const { data } = await axios.post("/api/blog/add", formData);
 
       if (data.success) {
         toast.success(data.message);
@@ -99,43 +78,6 @@ const AddBlog = () => {
       setIsAdding(false);
     }
   };
-
-  // const onSubmitHandler = async (e) => {
-  //   try {
-  //     e.preventDefault();
-  //     setIsAdding(true);
-
-  //     const blog = {
-  //       title,
-  //       subtitle,
-  //       description: quillRef.current.root.innerHTML,
-  //       category,
-  //       isPublished,
-  //     };
-
-  //     const formData = new FormData();
-  //     formData.append("blog", JSON.stringify(blog));
-  //     formData.append("image", image);
-
-  //     const { data } = await axios.post("/api/blog/add", formData);
-
-  //     if (data.success) {
-  //       toast.success(data.message);
-  //       setTitle("");
-  //       setSubtitle("");
-  //       quillRef.current.root.innerHTML = "";
-  //       setImage(null);
-  //       setCategory("Startup");
-  //       setIsPublished(false);
-  //     } else {
-  //       toast.error(data.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   } finally {
-  //     setIsAdding(false);
-  //   }
-  // };
 
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
