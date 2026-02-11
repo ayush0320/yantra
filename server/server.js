@@ -30,9 +30,6 @@ app.use(
   }),
 );
 
-// Explicit preflight handler
-app.options("*", cors());
-
 // Middleware
 app.use(express.json()); // To parse JSON bodies
 
