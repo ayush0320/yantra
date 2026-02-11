@@ -4,7 +4,6 @@ import cors from "cors";
 import connectDB from "./configs/db.js";
 import admintRouter from "./routes/adminRoutes.js";
 import blogRouter from "./routes/blogRoutes.js";
-import imageKitRouter from "./routes/imageKitRoutes.js";
 
 const app = express();
 
@@ -40,7 +39,6 @@ app.get("/", (req, res) => {
 });
 app.use("/api/admin", admintRouter);
 app.use("/api/blog", blogRouter);
-app.use("/api/imagekit", imageKitRouter);
 
 // Sample route
 const PORT = process.env.PORT || 3000;
